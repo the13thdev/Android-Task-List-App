@@ -1,0 +1,129 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="me.vijitdhingra.tasklist.DisplayEventActivity"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="0dp"
+    android:padding="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardViewDisplayEvent"
+            app:cardBackgroundColor="@color/event_color"
+            app:cardCornerRadius="0dp"
+            app:contentPaddingLeft="@dimen/normal_horizontal_padding"
+            app:contentPaddingRight="@dimen/normal_horizontal_padding"
+            app:contentPaddingTop="@dimen/cardView_top_padding"
+            app:contentPaddingBottom="@dimen/cardView_bottom_padding"
+            android:layout_marginBottom="@dimen/normal_vertical_padding"
+            app:cardElevation="@dimen/cardView_elevation">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewDisplayEventTitle"
+                android:theme="@android:style/Theme.Holo"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+        </android.support.v7.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/normal_horizontal_padding"
+            android:paddingRight="@dimen/normal_horizontal_padding"
+            android:paddingTop="@dimen/normal_vertical_padding"
+            android:paddingBottom="@dimen/normal_vertical_padding">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/textViewDisplayEventDescription"
+                android:text="Sample Description"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/normal_horizontal_padding"
+            android:paddingRight="@dimen/normal_horizontal_padding"
+            android:paddingTop="@dimen/normal_vertical_padding"
+            android:paddingBottom="@dimen/normal_vertical_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginBottom="@dimen/normal_margin"
+                android:text="Event Time: "/>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewDisplayEventDateTime"
+                android:gravity="center_horizontal"
+                android:textColor="@color/event_color"
+                android:layout_marginTop="@dimen/normal_margin"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/normal_horizontal_padding"
+            android:paddingRight="@dimen/normal_horizontal_padding"
+            android:paddingTop="@dimen/normal_vertical_padding"
+            android:paddingBottom="@dimen/normal_vertical_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginBottom="@dimen/normal_margin"
+                android:text="Time left:"/>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewDisplayEventDaysLeft"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="@dimen/normal_margin"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/event_color"
+                android:text="22 Days"/>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewDisplayEventTimeLeft"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="@dimen/normal_margin"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/event_color"
+                android:text="22:45:19"/>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewDisplayEventTimeHintLabel"
+                android:layout_marginTop="@dimen/normal_margin"
+                android:gravity="center_horizontal"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="(hh:mm:ss)"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

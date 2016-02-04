@@ -1,0 +1,77 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="me.vijitdhingra.tasklist.DisplayTaskActivity"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardViewDisplayTask"
+            app:cardCornerRadius="0dp"
+            app:contentPaddingLeft="@dimen/normal_horizontal_padding"
+            app:contentPaddingRight="@dimen/normal_horizontal_padding"
+            app:contentPaddingTop="@dimen/cardView_top_padding"
+            app:contentPaddingBottom="@dimen/cardView_bottom_padding"
+            android:layout_marginBottom="@dimen/normal_vertical_padding"
+            app:cardElevation="@dimen/cardView_elevation">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewDisplayTaskTitle"
+                android:theme="@android:style/Theme.Holo"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+        </android.support.v7.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/normal_horizontal_padding"
+            android:paddingRight="@dimen/normal_horizontal_padding"
+            android:paddingTop="@dimen/normal_vertical_padding"
+            android:paddingBottom="@dimen/normal_vertical_padding">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/textViewDisplayTaskDescription"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/normal_horizontal_padding"
+            android:paddingRight="@dimen/normal_horizontal_padding"
+            android:paddingTop="@dimen/normal_vertical_padding"
+            android:paddingBottom="@dimen/normal_vertical_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Priority: "/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/textViewDisplayTaskPriority"
+                android:textColor="@color/priority_urgent_color"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginLeft="@dimen/listItem_middlePadding"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

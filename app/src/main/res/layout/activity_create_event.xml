@@ -1,0 +1,91 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="me.vijitdhingra.tasklist.CreateEventActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardViewEvent"
+            app:cardBackgroundColor="@color/event_color"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="@dimen/cardView_elevation"
+            app:contentPaddingLeft="@dimen/normal_horizontal_padding"
+            app:contentPaddingRight="@dimen/normal_horizontal_padding"
+            app:contentPaddingTop="@dimen/cardView_top_padding"
+            app:contentPaddingBottom="@dimen/cardView_bottom_padding"
+            android:layout_marginBottom="@dimen/normal_vertical_padding">
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editTextEventTitle"
+                android:theme="@android:style/Theme.Holo"
+                android:textColorHint="#E0E0E0"
+                android:hint="@string/text_hint_title"
+                android:maxLength="65"
+                android:inputType="textCapWords|textMultiLine"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+        </android.support.v7.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/normal_horizontal_padding"
+            android:paddingRight="@dimen/normal_horizontal_padding"
+            android:paddingTop="@dimen/normal_vertical_padding"
+            android:paddingBottom="@dimen/normal_vertical_padding">
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/editTextEventDescription"
+                android:maxLength="350"
+                android:hint="@string/text_hint_description"
+                android:inputType="textCapSentences|textMultiLine"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/normal_horizontal_padding"
+            android:paddingRight="@dimen/normal_horizontal_padding"
+            android:paddingTop="@dimen/normal_vertical_padding"
+            android:paddingBottom="@dimen/normal_vertical_padding">
+
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_setEventDate"
+                android:text="@string/text_button_set_date"
+                android:layout_weight="6"
+                android:onClick="showDatePicker"
+                />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_setEventTime"
+                android:text="@string/text_button_set_time"
+                android:layout_weight="4"
+                android:onClick="showTimePicker"
+                />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>

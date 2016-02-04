@@ -1,0 +1,86 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="me.vijitdhingra.tasklist.CreateTaskActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="missingPrefix"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardViewTask"
+            app:cardBackgroundColor="@color/priority_urgent_color"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="@dimen/cardView_elevation"
+            app:contentPaddingLeft="@dimen/normal_horizontal_padding"
+            app:contentPaddingRight="@dimen/normal_horizontal_padding"
+            app:contentPaddingTop="@dimen/cardView_top_padding"
+            app:contentPaddingBottom="@dimen/cardView_bottom_padding"
+            android:layout_marginBottom="@dimen/normal_vertical_padding">
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editTextTaskTitle"
+                android:theme="@android:style/Theme.Holo"
+                android:textColorHint="#E0E0E0"
+                android:hint="Title"
+                android:maxLength="65"
+                android:inputType="textCapWords|textMultiLine"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+        </android.support.v7.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/normal_horizontal_padding"
+            android:paddingRight="@dimen/normal_horizontal_padding"
+            android:paddingTop="@dimen/normal_vertical_padding"
+            android:paddingBottom="@dimen/normal_vertical_padding">
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/editTextTaskDescription"
+                android:maxLength="350"
+                android:hint="Description"
+                android:inputType="textCapSentences|textMultiLine"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/normal_horizontal_padding"
+            android:paddingRight="@dimen/normal_horizontal_padding"
+            android:paddingTop="@dimen/normal_vertical_padding"
+            android:paddingBottom="@dimen/normal_vertical_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Priority: "/>
+
+            <Spinner
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/listItem_middlePadding"
+                android:layout_marginStart="@dimen/listItem_middlePadding"
+                android:id="@+id/spinnerPriorityOptions"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
