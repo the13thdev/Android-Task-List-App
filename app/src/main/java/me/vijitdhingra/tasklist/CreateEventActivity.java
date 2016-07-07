@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import java.util.Calendar;
 
 public class CreateEventActivity extends AppCompatActivity implements  DatePickerDialog.OnDateSetListener,TimePickerDialog.OnTimeSetListener{
 
+    private CardView cardViewEvent;
     private EditText editTextTitle,editTextDescription;
     private Button buttonDate,buttonTime;
     private boolean dateMentioned,timeMentioned;
@@ -34,10 +36,8 @@ public class CreateEventActivity extends AppCompatActivity implements  DatePicke
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        editTextTitle = (EditText) findViewById(R.id.editTextEventTitle);
-        editTextDescription = (EditText) findViewById(R.id.editTextEventDescription);
-        buttonDate = (Button) findViewById(R.id.button_setEventDate);
-        buttonTime = (Button) findViewById(R.id.button_setEventTime);
+        getViews();
+        DisplayHelper.adjustCardViewDisplay(cardViewEvent);
         dateMentioned=false;
         timeMentioned=false;
         eventDateTime = Calendar.getInstance();
@@ -108,6 +108,15 @@ public class CreateEventActivity extends AppCompatActivity implements  DatePicke
         {
             finish();
         }
+    }
+
+    public void getViews()
+    {
+        editTextTitle = (EditText) findViewById(R.id.editTextEventTitle);
+        editTextDescription = (EditText) findViewById(R.id.editTextEventDescription);
+        buttonDate = (Button) findViewById(R.id.button_setEventDate);
+        buttonTime = (Button) findViewById(R.id.button_setEventTime);
+        cardViewEvent = (CardView) findViewById(R.id.cardViewEvent);
     }
 
     public boolean hasUserEnteredData()

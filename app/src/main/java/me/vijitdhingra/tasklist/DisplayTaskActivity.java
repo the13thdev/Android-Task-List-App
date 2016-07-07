@@ -3,12 +3,14 @@ package me.vijitdhingra.tasklist;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,11 +20,17 @@ public class DisplayTaskActivity extends AppCompatActivity {
     private String title,description;
     private Priority priority;
     private DataManager dataManager;
+    CardView cardViewTask;
+    TextView textViewTitle;
+    TextView textViewDescription;
+    TextView textViewPriority;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_task);
         //getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getViews();
+        DisplayHelper.adjustCardViewDisplay(cardViewTask);
         dataManager = new DataManager(this);
         getDataFromIntent();
         displayData();
@@ -88,6 +96,14 @@ public class DisplayTaskActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void getViews()
+    {
+        cardViewTask = (CardView) findViewById(R.id.cardViewDisplayTask);
+        textViewTitle = (TextView) findViewById(R.id.textViewDisplayTaskTitle);
+        textViewDescription = (TextView) findViewById(R.id.textViewDisplayTaskDescription);
+        textViewPriority = (TextView) findViewById(R.id.textViewDisplayTaskPriority);
+    }
+
     /**
      * Gets the Task id,title,description and priority from the intent passed to this activity
      */
@@ -121,10 +137,6 @@ public class DisplayTaskActivity extends AppCompatActivity {
      */
     public void displayData()
     {
-        CardView cardView = (CardView) findViewById(R.id.cardViewDisplayTask);
-        TextView textViewTitle = (TextView) findViewById(R.id.textViewDisplayTaskTitle);
-        TextView textViewDescription = (TextView) findViewById(R.id.textViewDisplayTaskDescription);
-        TextView textViewPriority = (TextView) findViewById(R.id.textViewDisplayTaskPriority);
         textViewTitle.setText(title);
         if(description.length()>0)
         {
@@ -138,22 +150,22 @@ public class DisplayTaskActivity extends AppCompatActivity {
         {
             case URGENT:
                 textViewPriority.setText("Urgent");
-                cardView.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_urgent_color));
+                cardViewTask.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_urgent_color));
                 textViewPriority.setTextColor(ContextCompat.getColor(this,R.color.priority_urgent_color));
                 break;
             case HIGH:
                 textViewPriority.setText("High");
-                cardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.priority_high_color));
+                cardViewTask.setCardBackgroundColor(ContextCompat.getColor(this, R.color.priority_high_color));
                 textViewPriority.setTextColor(ContextCompat.getColor(this, R.color.priority_high_color));
                 break;
             case MEDIUM:
                 textViewPriority.setText("Medium");
-                cardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.priority_medium_color));
+                cardViewTask.setCardBackgroundColor(ContextCompat.getColor(this, R.color.priority_medium_color));
                 textViewPriority.setTextColor(ContextCompat.getColor(this, R.color.priority_medium_color));
                 break;
             default:
                 textViewPriority.setText("Low");
-                cardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.priority_low_color));
+                cardViewTask.setCardBackgroundColor(ContextCompat.getColor(this, R.color.priority_low_color));
                 textViewPriority.setTextColor(ContextCompat.getColor(this, R.color.priority_low_color));
         }
 

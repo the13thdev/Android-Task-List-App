@@ -1,6 +1,7 @@
 package me.vijitdhingra.tasklist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.format.DateFormat;
 
 import java.util.Calendar;
@@ -10,8 +11,8 @@ public final class EventHelper {
 
     /**
      * Returns a string representing the time in format 'HH:MM' or 'HH:MM AM/PM' depending upon whether the activity is 24-hour or not.
-     * @param eventTime
-     * @return
+     * @param eventTime Calendar object containing event time for string
+     * @return string representing the time in format 'HH:MM' or 'HH:MM AM/PM' depending upon whether the activity is 24-hour or not
      */
     public static String getEventTimeDisplayString(Calendar eventTime,Context context)
     {
@@ -69,9 +70,9 @@ public final class EventHelper {
     }
 
     /**
-     * Retuns a string representing the Date in the following format 'Day Month_Name Year'
-     * @param eventDate
-     * @return
+     * Creates a string representing the Date in the following format 'Day Month_Name Year'
+     * @param eventDate Calendar object containing event date for string.
+     * @return a string representing the Date in the following format 'Day Month_Name Year'
      */
     public static String getEventDateDisplayString(Calendar eventDate)
     {
@@ -131,25 +132,25 @@ public final class EventHelper {
         return (dayText+" "+monthName+" "+year);
     }
 
-    public static boolean compareToDoDateTimeEqual(Calendar eventDateTiime1, Calendar eventDateTime2)
+    public static boolean compareToDoDateTimeEqual(Calendar eventDateTime1, Calendar eventDateTime2)
     {
-        if(eventDateTiime1.get(Calendar.YEAR)!=eventDateTime2.get(Calendar.YEAR))
+        if(eventDateTime1.get(Calendar.YEAR)!=eventDateTime2.get(Calendar.YEAR))
         {
             return false;
         }
-        else if(eventDateTiime1.get(Calendar.MONTH)!=eventDateTime2.get(Calendar.MONTH))
+        else if(eventDateTime1.get(Calendar.MONTH)!=eventDateTime2.get(Calendar.MONTH))
         {
             return  false;
         }
-        else if(eventDateTiime1.get(Calendar.DAY_OF_MONTH)!=eventDateTime2.get(Calendar.DAY_OF_MONTH))
+        else if(eventDateTime1.get(Calendar.DAY_OF_MONTH)!=eventDateTime2.get(Calendar.DAY_OF_MONTH))
         {
             return  false;
         }
-        else if(eventDateTiime1.get(Calendar.HOUR)!=eventDateTime2.get(Calendar.HOUR))
+        else if(eventDateTime1.get(Calendar.HOUR_OF_DAY)!=eventDateTime2.get(Calendar.HOUR_OF_DAY))
         {
             return  false;
         }
-        else if(eventDateTiime1.get(Calendar.MINUTE)!=eventDateTime2.get(Calendar.MINUTE))
+        else if(eventDateTime1.get(Calendar.MINUTE)!=eventDateTime2.get(Calendar.MINUTE))
         {
             return  false;
         }
@@ -157,6 +158,26 @@ public final class EventHelper {
         {
             return  true;
         }
+    }
+
+    /**
+     * Adds necessar event data to the intent for DisplayEvent Class
+     * @param event
+     * @param intent
+     */
+    public static void addEventDataToIntentExtras(Event event, Intent intent)
+    {
+        Calendar eventDateTime = event.getEventDateTime();
+        intent.putExtra(DataManager.XMLTEXT_ID, event.getId());
+        intent.putExtra(DataManager.XMLTEXT_TITLE,event.getTitle());
+        intent.putExtra(DataManager.XMLTEXT_DESCRIPTION,event.getDescription());
+        //Adding Event Date Time data to intent extras.
+        intent.putExtra(DataManager.XMLTEXT_DAY,eventDateTime.get(Calendar.DAY_OF_MONTH));
+        intent.putExtra(DataManager.XMLTEXT_MONTH,eventDateTime.get(Calendar.MONTH));
+        intent.putExtra(DataManager.XMLTEXT_YEAR,eventDateTime.get(Calendar.YEAR));
+        intent.putExtra(DataManager.XMLTEXT_HOUR_OF_DAY,eventDateTime.get(Calendar.HOUR_OF_DAY));
+        intent.putExtra(DataManager.XMLTEXT_MINUTES,eventDateTime.get(Calendar.MINUTE));
+        intent.putExtra(DataManager.XMLTEXT_SECONDS,eventDateTime.get(Calendar.SECOND));
     }
 
 }

@@ -1,8 +1,16 @@
 package me.vijitdhingra.tasklist;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -28,8 +36,6 @@ public class DataManager {
 
     //Static Constants
     public enum SORT_ORDER{
-        CREATION_DATETIME_ASC,
-        CREATION_DATETIME_DSC,
         TASK_PRIORITY_ASC,
         TASK_PRIORITY_DSC,
         EVENT_DATETIME_ASC,
@@ -43,16 +49,14 @@ public class DataManager {
     public final static String XMLTEXT_IDCOUNTER="IDCOUNTER";
     public final static String XMLTEXT_TASKS_SORT_ORDER="TASKS_SORT_ORDER";
     public final static String XMLTEXT_EVENTS_SORT_ORDER="EVENTS_SORT_ORDER";
-    public final static String XMLTEXT_SORT_ORDER_CREATION_DATETIME_ASC="SORT_ORDER_CREATION_DATETIME_ASC";
-    public final static String XMLTEXT_SORT_ORDER_CREATION_DATETIME_DSC="SORT_ORDER_CREATION_DATETIME_DSC";
     public final static String XMLTEXT_SORT_ORDER_TASK_PRIORITY_ASC="SORT_ORDER_TASK_PRIORITY_ASC";
     public final static String XMLTEXT_SORT_ORDER_TASK_PRIORITY_DSC="SORT_ORDER_TASK_PRIORITY_DSC";
     public final static String XMLTEXT_SORT_ORDER_EVENT_DATETIME_ASC="SORT_ORDER_EVENT_DATETIME_ASC";
     public final static String XMLTEXT_SORT_ORDER_EVENT_DATETIME_DSC="SORT_ORDER_EVENT_DATETIME_DSC";
 
-    //XML File Attributes Names (Common)
+    //XML File Attributes Names (Task and Event)
     public final static String XMLTEXT_ID="ID";
-    //XML Element Names (Common)
+    //XML Element Names (Task and Event)
     public final static String XMLTEXT_TASK="TASK";
     public final static String XMLTEXT_EVENT="EVENT";
     public final static String XMLTEXT_TITLE="TITLE";
@@ -108,8 +112,8 @@ public class DataManager {
             dataFile = new File(context.getFilesDir(), FILENAME);
             if (!dataFile.exists()) {
                 idCounter=1;
-                tasksSortOrder= SORT_ORDER.CREATION_DATETIME_ASC;
-                eventsSortOrder = SORT_ORDER.CREATION_DATETIME_ASC;
+                tasksSortOrder= SORT_ORDER.TASK_PRIORITY_DSC;
+                eventsSortOrder = SORT_ORDER.EVENT_DATETIME_DSC;
                 dataFile.createNewFile();
                 Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
                 Element rootElement = document.createElement(XMLTEXT_TASKLIST);
@@ -143,12 +147,6 @@ public class DataManager {
         String sortOrderString="";
         switch (sort_order)
         {
-            case CREATION_DATETIME_ASC:
-                sortOrderString = XMLTEXT_SORT_ORDER_CREATION_DATETIME_ASC;
-                break;
-            case CREATION_DATETIME_DSC:
-                sortOrderString = XMLTEXT_SORT_ORDER_CREATION_DATETIME_DSC;
-                break;
             case TASK_PRIORITY_ASC:
                 sortOrderString =  XMLTEXT_SORT_ORDER_TASK_PRIORITY_ASC;
                 break;
@@ -166,11 +164,7 @@ public class DataManager {
 
     private SORT_ORDER getSortOrderFromString(String sortOrderString)
     {
-        if(sortOrderString.equals(XMLTEXT_SORT_ORDER_CREATION_DATETIME_ASC))
-            return SORT_ORDER.CREATION_DATETIME_ASC;
-        else if(sortOrderString.equals(XMLTEXT_SORT_ORDER_CREATION_DATETIME_DSC))
-            return SORT_ORDER.CREATION_DATETIME_DSC;
-        else if(sortOrderString.equals(XMLTEXT_SORT_ORDER_TASK_PRIORITY_ASC))
+        if(sortOrderString.equals(XMLTEXT_SORT_ORDER_TASK_PRIORITY_ASC))
             return SORT_ORDER.TASK_PRIORITY_ASC;
         else if(sortOrderString.equals(XMLTEXT_SORT_ORDER_TASK_PRIORITY_DSC))
             return SORT_ORDER.TASK_PRIORITY_DSC;
@@ -237,30 +231,20 @@ public class DataManager {
     {
         switch(tasksSortOrder)
         {
-            case CREATION_DATETIME_ASC:
-                //Comparing tasks on the basis of their creationDateTime.
-                Collections.sort(listTasks, new Comparator<Task>() {
-                    @Override
-                    public int compare(Task lhs, Task rhs) {
-                        return lhs.getCreationDateTime().compareTo(rhs.getCreationDateTime());
-                    }
-                });
-                break;
-            case CREATION_DATETIME_DSC:
-                //Comparing tasks on the basis of their creationDateTime in reverse.
-                Collections.sort(listTasks, new Comparator<Task>() {
-                    @Override
-                    public int compare(Task lhs, Task rhs) {
-                        return rhs.getCreationDateTime().compareTo(lhs.getCreationDateTime());
-                    }
-                });
-                break;
             case TASK_PRIORITY_ASC:
                 //Comparing tasks on the basis of their priority.
                 Collections.sort(listTasks, new Comparator<Task>() {
                     @Override
                     public int compare(Task lhs, Task rhs) {
-                        return lhs.getPriority().compareTo(rhs.getPriority());
+                        if(lhs.getPriority().compareTo(rhs.getPriority())!=0)
+                        {
+                            return lhs.getPriority().compareTo(rhs.getPriority());
+                        }
+                        else
+                        {
+                            //If Priority equal then further sorting on the basis of CreationDateTime
+                            return rhs.getCreationDateTime().compareTo(lhs.getCreationDateTime());
+                        }
                     }
                 });
                 break;
@@ -269,7 +253,15 @@ public class DataManager {
                 Collections.sort(listTasks, new Comparator<Task>() {
                     @Override
                     public int compare(Task lhs, Task rhs) {
-                        return rhs.getPriority().compareTo(lhs.getPriority());
+                        if(lhs.getPriority().compareTo(rhs.getPriority())!=0)
+                        {
+                            return rhs.getPriority().compareTo(lhs.getPriority());
+                        }
+                        else
+                        {
+                            //If Priority equal then further sorting on the basis of CreationDateTime
+                            return rhs.getCreationDateTime().compareTo(lhs.getCreationDateTime());
+                        }
                     }
                 });
                 break;
@@ -280,30 +272,45 @@ public class DataManager {
     {
         switch(eventsSortOrder)
         {
-            case CREATION_DATETIME_ASC:
-                //Comparing events on the basis of their creationDateTime.
-                Collections.sort(listEvents, new Comparator<Event>() {
-                    @Override
-                    public int compare(Event lhs, Event rhs) {
-                        return lhs.getCreationDateTime().compareTo(rhs.getCreationDateTime());
-                    }
-                });
-                break;
-            case CREATION_DATETIME_DSC:
-                //Comparing events on the basis of their creationDateTime in reverse.
-                Collections.sort(listEvents, new Comparator<Event>() {
-                    @Override
-                    public int compare(Event lhs, Event rhs) {
-                        return rhs.getCreationDateTime().compareTo(lhs.getCreationDateTime());
-                    }
-                });
-                break;
             case EVENT_DATETIME_ASC:
                 //Comparing events on the basis of their eventDateTime.
                 Collections.sort(listEvents, new Comparator<Event>() {
                     @Override
                     public int compare(Event lhs, Event rhs) {
-                        return lhs.getEventDateTime().compareTo(rhs.getEventDateTime());
+                        if(lhs.getEventDateTime().compareTo(rhs.getEventDateTime())!=0)
+                        {
+                            Calendar currentTime = Calendar.getInstance();
+                            if(lhs.getEventDateTime().compareTo(currentTime)>0 && rhs.getEventDateTime().compareTo(currentTime)>0)
+                            {
+                                //case when both lhs and rhs events are upcoming
+                                long lhsMillisFromCurrentTime=lhs.getEventDateTime().getTimeInMillis()-currentTime.getTimeInMillis();
+                                long rhsMillisFromCurrentTime=rhs.getEventDateTime().getTimeInMillis()-currentTime.getTimeInMillis();
+                                if(lhsMillisFromCurrentTime<rhsMillisFromCurrentTime)
+                                    return -1;
+                                else
+                                    return 1;
+                            }
+                            else if(lhs.getEventDateTime().compareTo(currentTime)<0 && rhs.getEventDateTime().compareTo(currentTime)<0)
+                            {
+                                //case when both lhs and rhs events are passed
+                                long lhsMillisFromCurrentTime=currentTime.getTimeInMillis()-lhs.getEventDateTime().getTimeInMillis();
+                                long rhsMillisFromCurrentTime=currentTime.getTimeInMillis()-rhs.getEventDateTime().getTimeInMillis();
+                                if(lhsMillisFromCurrentTime<rhsMillisFromCurrentTime)
+                                    return -1;
+                                else
+                                    return 1;
+                            }
+                            else
+                            {
+                                //if returns negative value, order remains as it is, if it returns positive then order changed
+                                return lhs.getEventDateTime().compareTo(rhs.getEventDateTime());
+                            }
+                        }
+                        else
+                        {
+                            //If EventDatetime equal then further sorting on the basis of CreationDateTime
+                            return rhs.getCreationDateTime().compareTo(lhs.getCreationDateTime());
+                        }
                     }
                 });
                 break;
@@ -312,7 +319,42 @@ public class DataManager {
                 Collections.sort(listEvents, new Comparator<Event>() {
                     @Override
                     public int compare(Event lhs, Event rhs) {
-                        return rhs.getEventDateTime().compareTo(lhs.getEventDateTime());
+                        if(lhs.getEventDateTime().compareTo(rhs.getEventDateTime())!=0)
+                        {
+
+                            Calendar currentTime = Calendar.getInstance();
+                            if(lhs.getEventDateTime().compareTo(currentTime)>0 && rhs.getEventDateTime().compareTo(currentTime)>0)
+                            {
+                                //case when both lhs and rhs events are upcoming
+                                long lhsMillisFromCurrentTime=lhs.getEventDateTime().getTimeInMillis()-currentTime.getTimeInMillis();
+                                long rhsMillisFromCurrentTime=rhs.getEventDateTime().getTimeInMillis()-currentTime.getTimeInMillis();
+                                if(lhsMillisFromCurrentTime<rhsMillisFromCurrentTime)
+                                    return -1;
+                                else
+                                    return 1;
+                            }
+                            else if(lhs.getEventDateTime().compareTo(currentTime)<0 && rhs.getEventDateTime().compareTo(currentTime)<0)
+                            {
+                                //case when both lhs and rhs events are passed
+                                long lhsMillisFromCurrentTime=currentTime.getTimeInMillis()-lhs.getEventDateTime().getTimeInMillis();
+                                long rhsMillisFromCurrentTime=currentTime.getTimeInMillis()-rhs.getEventDateTime().getTimeInMillis();
+                                if(lhsMillisFromCurrentTime<rhsMillisFromCurrentTime)
+                                    return -1;
+                                else
+                                    return 1;
+                            }
+                            else
+                            {
+                                //if returns negative value, order remains as it is, if it returns positive then order changed.
+                                return rhs.getEventDateTime().compareTo(lhs.getEventDateTime());
+                            }
+
+                        }
+                        else
+                        {
+                            //If EventDatetime equal then further sorting on the basis of CreationDateTime
+                            return rhs.getCreationDateTime().compareTo(lhs.getCreationDateTime());
+                        }
                     }
                 });
                 break;
@@ -501,11 +543,76 @@ public class DataManager {
             TransformerFactory.newInstance().newTransformer().transform(new DOMSource(document), new StreamResult(dataFile));
             //Adding the task in the listTasks variable
             listEvents.add(event);
+
+            //Adding an alarm for this event using Alarm Manager
+            setEventAlarm(event);
         }
         catch(Exception e)
         {
             Log.e(EXCEPTIONTAG_TASKLIST_DATAMANAGER, "saveEvent :"+e.getMessage());
         }
+    }
+
+    /**
+     * Sets an alarm for the event using Alarm Manager.
+     * @param event
+     */
+    private void setEventAlarm(Event event)
+    {
+        Intent notificationIntent = new Intent(context,NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.INTENT_EXTRA_NOTIFICATION,getEventNotification(event));
+        notificationIntent.putExtra(NotificationPublisher.INTENT_EXTRA_NOTIFICATION_ID,event.getId());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,event.getId(),notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        //setting alarm for 30 minutes before event time
+        alarmManager.set(AlarmManager.RTC, event.getEventDateTime().getTimeInMillis() - 1000 * 60 * 30, pendingIntent);
+    }
+
+    /**
+     * Cancels the alarm set for this event using Alarm Manager.
+     * @param event
+     */
+    private void cancelEventAlarm(Event event)
+    {
+        Intent notificationIntent = new Intent(context,NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.INTENT_EXTRA_NOTIFICATION,getEventNotification(event));
+        notificationIntent.putExtra(NotificationPublisher.INTENT_EXTRA_NOTIFICATION_ID,event.getId());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,event.getId(),notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        //cancelling alarm for this pending intent
+        alarmManager.cancel(pendingIntent);
+    }
+
+    /**
+     * Builds and returns the notification to show when the alarm for an event goes off.
+     * @param event
+     * @return
+     */
+    private Notification getEventNotification(Event event)
+    {
+        NotificationCompat.Builder builder = new  NotificationCompat.Builder(context);
+        builder.setContentTitle(event.getTitle());
+        builder.setContentText(EventHelper.getEventTimeDisplayString(event.getEventDateTime(),context));
+        builder.setSmallIcon(R.drawable.ic_stat_notification_event_available);
+        builder.setCategory(Notification.CATEGORY_EVENT);
+        builder.setPriority(Notification.PRIORITY_HIGH);
+        builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+        builder.setVibrate(new long[]{500, 1000});
+        builder.setLights(Color.GREEN, 2000, 2000);
+        builder.setColor(ContextCompat.getColor(context,R.color.event_color));
+
+        //setting notification content intent
+        Intent intent = new Intent(context,DisplayEventActivity.class);
+        //Adding event data to intent extras
+        EventHelper.addEventDataToIntentExtras(event,intent);
+        //Setting up parent stack
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        taskStackBuilder.addParentStack(DisplayEventActivity.class);
+        taskStackBuilder.addNextIntent(intent);
+        //Setting Tab position in the TaskListActivityIntent to display events tab
+        taskStackBuilder.editIntentAt(0).putExtra(DataManager.INTENT_EXTRA_TAB_POSITION, 1);
+        builder.setContentIntent(taskStackBuilder.getPendingIntent(event.getId(), PendingIntent.FLAG_UPDATE_CURRENT));
+        return builder.build();
     }
 
     private void addDateTimeToXMLElement(Element dateTimeElement,Document document,Calendar dateTime)
@@ -596,6 +703,9 @@ public class DataManager {
                     Event event = getEventfromXMLElement(element);
                     if(event.getId()==id)
                     {
+                        //Deleting alarm added for this event using Alarm Manager.
+                        cancelEventAlarm(event);
+                        //Deleting event from xml data file
                         element.getParentNode().removeChild(element);
                         break;
                     }
@@ -686,7 +796,7 @@ public class DataManager {
                     elementEventId = Integer.valueOf(elementEvent.getAttribute(XMLTEXT_ID));
                     if(elementEventId==updateEventId)
                     {
-                        //setTextContent replaces any child nodes that the element already has with a single text node containing the string passed into this function.
+                        //updating Event Element with new data
                         Element elementTitle = (Element) elementEvent.getElementsByTagName(XMLTEXT_TITLE).item(0);
                         elementTitle.setTextContent(newTitle);
                         Element elementDescription = (Element) elementEvent.getElementsByTagName(XMLTEXT_DESCRIPTION).item(0);
@@ -698,6 +808,9 @@ public class DataManager {
                         Element elementNewEventDateTime = document.createElement(XMLTEXT_EVENT_DATETIME);
                         elementEvent.appendChild(elementNewEventDateTime);
                         addDateTimeToXMLElement(elementNewEventDateTime, document, newEventDatetime);
+
+                        //Updating alarm for this event by setting it again
+                        setEventAlarm(getEventfromXMLElement(elementEvent));
                     }
                 }
             }
@@ -765,7 +878,7 @@ public class DataManager {
     }
 
     /**
-     * Always use this functiom to assign ID to new tasks.
+     * Always use this function to assign ID to new tasks.
      * @return
      */
     public int getIdCounter()

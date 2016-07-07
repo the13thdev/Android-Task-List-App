@@ -28,6 +28,8 @@ public class TasklistActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasklist);
+        taskFragment = new TasksFragment();
+        eventsFragment = new EventsFragment();
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabsPagerAdapter = new TabsPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(tabsPagerAdapter);
@@ -106,10 +108,8 @@ public class TasklistActivity extends AppCompatActivity {
             switch(index)
             {
                 case 0:
-                    taskFragment = new TasksFragment();
                     return taskFragment;
                 case 1:
-                    eventsFragment = new EventsFragment();
                     return eventsFragment;
             }
             return null;
@@ -148,9 +148,10 @@ public class TasklistActivity extends AppCompatActivity {
             builder.setSingleChoiceItems(R.array.sort_order_tasks, getCurrentTasksSortOrderPos(dataManager.getTasksSortOrder()), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    dataManager.updateTasksSortOrder(getSortOrderFromSelectedPos(which));
-                    //Following line of coe is okay because this fragment is only usd in TaskListActivity
+                    //Following line of code is okay because this fragment is only usd in TaskListActivity
                     TasklistActivity currentActivity = (TasklistActivity) getActivity();
+                    //Todo Error Prone  next line, Null Pointer Exception Sometimes
+                    dataManager.updateTasksSortOrder(getSortOrderFromSelectedPos(which));
                     currentActivity.taskFragment.updateTaskList(dataManager.getListOfTasks());
                     SortTasksDialogFragment.this.dismiss();
                 }
@@ -162,14 +163,10 @@ public class TasklistActivity extends AppCompatActivity {
         {
             switch (sort_order)
             {
-                case TASK_PRIORITY_ASC:
-                    return 0;
                 case TASK_PRIORITY_DSC:
-                    return 1;
-                case CREATION_DATETIME_DSC:
-                    return 2;
+                    return 0;
                 default:
-                    return 3;
+                    return 1;
             }
         }
 
@@ -178,13 +175,9 @@ public class TasklistActivity extends AppCompatActivity {
             switch (pos)
             {
                 case 0:
-                    return DataManager.SORT_ORDER.TASK_PRIORITY_ASC;
-                case 1:
                     return DataManager.SORT_ORDER.TASK_PRIORITY_DSC;
-                case 2:
-                    return DataManager.SORT_ORDER.CREATION_DATETIME_DSC;
                 default:
-                    return DataManager.SORT_ORDER.CREATION_DATETIME_ASC;
+                    return DataManager.SORT_ORDER.TASK_PRIORITY_ASC;
             }
         }
     }
@@ -201,12 +194,10 @@ public class TasklistActivity extends AppCompatActivity {
             builder.setSingleChoiceItems(R.array.sort_order_events, getCurrentTasksSortOrderPos(dataManager.getEventsSortOrder()), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    //Toast.makeText(getActivity(),""+dataManager.getEventsSortOrder(),Toast.LENGTH_SHORT).show();
-                    dataManager.updateEventsSortOrder(getSortOrderFromSelectedPos(which));
-                    //Following line of coe is okay because this fragment is only usd in TaskListActivity
+                    //Following line of code is okay because this fragment is only usd in TaskListActivity
                     TasklistActivity currentActivity = (TasklistActivity) getActivity();
+                    dataManager.updateEventsSortOrder(getSortOrderFromSelectedPos(which));
                     currentActivity.eventsFragment.updateEventList(dataManager.getListOfEvents());
-                    //Toast.makeText(getActivity(), "" + dataManager.getEventsSortOrder(), Toast.LENGTH_SHORT).show();
                     SortEventsDialogFragment.this.dismiss();
                 }
             });
@@ -217,14 +208,10 @@ public class TasklistActivity extends AppCompatActivity {
         {
             switch (sort_order)
             {
-                case EVENT_DATETIME_ASC:
-                    return 0;
                 case EVENT_DATETIME_DSC:
-                    return 1;
-                case CREATION_DATETIME_DSC:
-                    return 2;
+                    return 0;
                 default:
-                    return 3;
+                    return 1;
             }
         }
 
@@ -233,13 +220,9 @@ public class TasklistActivity extends AppCompatActivity {
             switch (pos)
             {
                 case 0:
-                    return DataManager.SORT_ORDER.EVENT_DATETIME_ASC;
-                case 1:
                     return DataManager.SORT_ORDER.EVENT_DATETIME_DSC;
-                case 2:
-                    return DataManager.SORT_ORDER.CREATION_DATETIME_DSC;
                 default:
-                    return DataManager.SORT_ORDER.CREATION_DATETIME_ASC;
+                    return DataManager.SORT_ORDER.EVENT_DATETIME_ASC;
             }
         }
     }

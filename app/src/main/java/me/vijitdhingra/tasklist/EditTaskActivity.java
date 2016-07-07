@@ -27,18 +27,16 @@ public class EditTaskActivity extends AppCompatActivity implements AdapterView.O
     private EditText editTextTitle;
     private EditText editTextDescription;
     private Spinner spinnerPriorityOptions;
-    private CardView cardView;
+    private CardView cardViewTask;
     private DataManager dataManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
+        getViews();
+        DisplayHelper.adjustCardViewDisplay(cardViewTask);;
         getDataFromIntent();
         dataManager = new DataManager(this);
-        cardView = (CardView) findViewById(R.id.cardViewTask);
-        editTextTitle = (EditText) findViewById(R.id.editTextTaskTitle);
-        editTextDescription = (EditText) findViewById(R.id.editTextTaskDescription);
-        spinnerPriorityOptions = (Spinner) this.findViewById(R.id.spinnerPriorityOptions);
         populateSpinnerPriorityOptions();
         displayOrignalData();
     }
@@ -100,16 +98,16 @@ public class EditTaskActivity extends AppCompatActivity implements AdapterView.O
         switch(pos)
         {
             case 0:
-                cardView.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_urgent_color));
+                cardViewTask.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_urgent_color));
                 break;
             case 1:
-                cardView.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_high_color));
+                cardViewTask.setCardBackgroundColor(ContextCompat.getColor(this, R.color.priority_high_color));
                 break;
             case 2:
-                cardView.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_medium_color));
+                cardViewTask.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_medium_color));
                 break;
             default:
-                cardView.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_low_color));
+                cardViewTask.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_low_color));
         }
 
     }
@@ -117,6 +115,14 @@ public class EditTaskActivity extends AppCompatActivity implements AdapterView.O
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
+    }
+
+    public void getViews()
+    {
+        cardViewTask = (CardView) findViewById(R.id.cardViewTask);
+        editTextTitle = (EditText) findViewById(R.id.editTextTaskTitle);
+        editTextDescription = (EditText) findViewById(R.id.editTextTaskDescription);
+        spinnerPriorityOptions = (Spinner) this.findViewById(R.id.spinnerPriorityOptions);
     }
 
 

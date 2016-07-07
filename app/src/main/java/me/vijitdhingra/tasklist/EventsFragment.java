@@ -75,18 +75,8 @@ public class EventsFragment extends android.support.v4.app.Fragment implements A
      */
     public void startActivityDisplayEvent(Event event)
     {
-        Calendar eventDateTime = event.getEventDateTime();
         Intent intent = new Intent(this.getActivity(),DisplayEventActivity.class);
-        intent.putExtra(DataManager.XMLTEXT_ID, event.getId());
-        intent.putExtra(DataManager.XMLTEXT_TITLE,event.getTitle());
-        intent.putExtra(DataManager.XMLTEXT_DESCRIPTION,event.getDescription());
-        //Adding Event Date Time data to intent extras.
-        intent.putExtra(DataManager.XMLTEXT_DAY,eventDateTime.get(Calendar.DAY_OF_MONTH));
-        intent.putExtra(DataManager.XMLTEXT_MONTH,eventDateTime.get(Calendar.MONTH));
-        intent.putExtra(DataManager.XMLTEXT_YEAR,eventDateTime.get(Calendar.YEAR));
-        intent.putExtra(DataManager.XMLTEXT_HOUR_OF_DAY,eventDateTime.get(Calendar.HOUR_OF_DAY));
-        intent.putExtra(DataManager.XMLTEXT_MINUTES,eventDateTime.get(Calendar.MINUTE));
-        intent.putExtra(DataManager.XMLTEXT_SECONDS,eventDateTime.get(Calendar.SECOND));
+        EventHelper.addEventDataToIntentExtras(event,intent);
         startActivity(intent);
     }
 
@@ -147,7 +137,15 @@ public class EventsFragment extends android.support.v4.app.Fragment implements A
             textView.setText(event.getTitle());
             TextDrawable textDrawable;
             imageText="E";
-            textDrawable=TextDrawable.builder().beginConfig().bold().endConfig().buildRound(imageText, ContextCompat.getColor(EventsFragment.this.getActivity(), R.color.event_color));
+            if(event.getEventDateTime().compareTo(Calendar.getInstance())<0)
+            {
+                //case when event has passed
+                textDrawable=TextDrawable.builder().beginConfig().bold().endConfig().buildRound(imageText, ContextCompat.getColor(EventsFragment.this.getActivity(), R.color.event_passed_color));
+            }
+            else
+            {
+                textDrawable = TextDrawable.builder().beginConfig().bold().endConfig().buildRound(imageText, ContextCompat.getColor(EventsFragment.this.getActivity(), R.color.event_color));
+            }
             imageView.setImageDrawable(textDrawable);
             return  convertView;
         }

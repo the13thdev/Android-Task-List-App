@@ -23,15 +23,11 @@
         <item>Low</item>
     </string-array>
     <string-array name="sort_order_tasks">
-        <item>Priority: Low to Urgent</item>
-        <item>Priority: Urgent to Low</item>
-        <item>Time Added: Newest to Oldest</item>
-        <item>Time Added: Oldest to Newest</item>
+        <item>Priority: Urgent First</item>
+        <item>Priority: Low First</item>
     </string-array>
     <string-array name="sort_order_events">
-        <item>Event Time: Recent to Last</item>
-        <item>Event Time: Last to Recent</item>
-        <item>Time Added: Newest to Oldest</item>
-        <item>Time Added: Oldest to Newest</item>
+        <item>Event Time: Upcoming First</item>
+        <item>Event Time: Passed First</item>
     </string-array>
 </resources>

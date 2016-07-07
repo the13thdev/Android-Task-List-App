@@ -1,16 +1,20 @@
 package me.vijitdhingra.tasklist;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import java.util.Calendar;
 
@@ -22,6 +26,7 @@ public class DisplayEventActivity extends AppCompatActivity {
     private DataManager dataManager;
     private Handler handler;
     private Runnable runnableCode;
+    CardView cardViewEvent;
     private TextView textViewTitle;
     private TextView textViewDescription;
     private TextView textViewEventDateTime;
@@ -34,14 +39,14 @@ public class DisplayEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_event);
         //getSupportActionBar().setDisplayShowTitleEnabled(false);
-        textViewTitle = (TextView) findViewById(R.id.textViewDisplayEventTitle);
-        textViewDescription = (TextView) findViewById(R.id.textViewDisplayEventDescription);
-        textViewEventDateTime = (TextView) findViewById(R.id.textViewDisplayEventDateTime);
-        textViewEventDaysLeft = (TextView) findViewById(R.id.textViewDisplayEventDaysLeft);
-        textViewEventTimeLeft = (TextView) findViewById(R.id.textViewDisplayEventTimeLeft);
-        textViewEventTimeHintLabel = (TextView) findViewById(R.id.textViewDisplayEventTimeHintLabel);
+        getViews();
+        DisplayHelper.adjustCardViewDisplay(cardViewEvent);
         dataManager = new DataManager(this);
         getDataFromIntent();
+        //Cancelling any notifications if shown for this event
+        NotificationManager notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(eventId);
+
         handler = new Handler();
         runnableCode = new Runnable() {
             @Override
@@ -124,6 +129,17 @@ public class DisplayEventActivity extends AppCompatActivity {
         startUpdatingEventTimeLeft();
     }
 
+    public void getViews()
+    {
+        cardViewEvent = (CardView) findViewById(R.id.cardViewDisplayEvent);
+        textViewTitle = (TextView) findViewById(R.id.textViewDisplayEventTitle);
+        textViewDescription = (TextView) findViewById(R.id.textViewDisplayEventDescription);
+        textViewEventDateTime = (TextView) findViewById(R.id.textViewDisplayEventDateTime);
+        textViewEventDaysLeft = (TextView) findViewById(R.id.textViewDisplayEventDaysLeft);
+        textViewEventTimeLeft = (TextView) findViewById(R.id.textViewDisplayEventTimeLeft);
+        textViewEventTimeHintLabel = (TextView) findViewById(R.id.textViewDisplayEventTimeHintLabel);
+    }
+
     /**
      * Gets the necessary event data from the intent passed to this activity
      */
@@ -148,6 +164,15 @@ public class DisplayEventActivity extends AppCompatActivity {
      */
     public void displayData()
     {
+        /*if(eventDateTime.compareTo(Calendar.getInstance())<0)
+        {
+            //case when event has passed
+            cardViewEvent.setCardBackgroundColor(ContextCompat.getColor(this, R.color.event_passed_color));
+        }
+        else
+        {
+            cardViewEvent.setCardBackgroundColor(ContextCompat.getColor(this, R.color.event_color));
+        }*/
         textViewTitle.setText(title);
         if(description.length()>0)
         {

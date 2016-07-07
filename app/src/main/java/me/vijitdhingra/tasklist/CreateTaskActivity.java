@@ -23,7 +23,7 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
     private EditText editTextTitle;
     private EditText editTextDescription;
     private Spinner spinnerPriorityOptions;
-    private CardView cardView;
+    private CardView cardViewTask;
     private DataManager dataManagerTasklist;
 
     @Override
@@ -31,11 +31,9 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getViews();
+        DisplayHelper.adjustCardViewDisplay(cardViewTask);
         dataManagerTasklist = new DataManager(this);
-        cardView = (CardView) findViewById(R.id.cardViewTask);
-        editTextTitle = (EditText) findViewById(R.id.editTextTaskTitle);
-        editTextDescription = (EditText) findViewById(R.id.editTextTaskDescription);
-        spinnerPriorityOptions = (Spinner) this.findViewById(R.id.spinnerPriorityOptions);
         populateSpinnerPriorityOptions();
     }
 
@@ -102,6 +100,14 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
         }
     }
 
+    public void getViews()
+    {
+        cardViewTask = (CardView) findViewById(R.id.cardViewTask);
+        editTextTitle = (EditText) findViewById(R.id.editTextTaskTitle);
+        editTextDescription = (EditText) findViewById(R.id.editTextTaskDescription);
+        spinnerPriorityOptions = (Spinner) this.findViewById(R.id.spinnerPriorityOptions);
+    }
+
     public boolean hasUserEnteredData()
     {
         String title = editTextTitle.getText().toString();
@@ -142,16 +148,16 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
         switch(pos)
         {
             case 0:
-                cardView.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_urgent_color));
+                cardViewTask.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_urgent_color));
                 break;
             case 1:
-                cardView.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_high_color));
+                cardViewTask.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_high_color));
                 break;
             case 2:
-                cardView.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_medium_color));
+                cardViewTask.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_medium_color));
                 break;
             default:
-                cardView.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_low_color));
+                cardViewTask.setCardBackgroundColor(ContextCompat.getColor(this,R.color.priority_low_color));
         }
 
     }

@@ -8,7 +8,9 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +29,7 @@ public class EditEventActivity extends AppCompatActivity implements  DatePickerD
     private String title,description;
     private Calendar eventDateTime,originalEventDateTime;
     private DataManager dataManager;
+    private CardView cardViewEvent;
     private EditText editTextTitle,editTextDescription;
     private Button buttonDate,buttonTime;
 
@@ -34,11 +37,9 @@ public class EditEventActivity extends AppCompatActivity implements  DatePickerD
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+        getViews();
+        DisplayHelper.adjustCardViewDisplay(cardViewEvent);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        editTextTitle = (EditText) findViewById(R.id.editTextEventTitle);
-        editTextDescription = (EditText) findViewById(R.id.editTextEventDescription);
-        buttonDate = (Button) findViewById(R.id.button_setEventDate);
-        buttonTime = (Button) findViewById(R.id.button_setEventTime);
         eventDateTime = Calendar.getInstance();
         originalEventDateTime = Calendar.getInstance();
         dataManager = new DataManager(this);
@@ -69,9 +70,13 @@ public class EditEventActivity extends AppCompatActivity implements  DatePickerD
                 {
                     updateEvent();
                     Toast.makeText(this, "Event Updated", Toast.LENGTH_SHORT).show();
+                    startActivityDisplayEvent(eventDateTime);
                 }
             }
-            startActivityDisplayEvent(eventDateTime);
+            else
+            {
+                startActivityDisplayEvent(originalEventDateTime);
+            }
             return true;
         }
         else if(id==android.R.id.home)
@@ -85,6 +90,15 @@ public class EditEventActivity extends AppCompatActivity implements  DatePickerD
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void getViews()
+    {
+        editTextTitle = (EditText) findViewById(R.id.editTextEventTitle);
+        editTextDescription = (EditText) findViewById(R.id.editTextEventDescription);
+        buttonDate = (Button) findViewById(R.id.button_setEventDate);
+        buttonTime = (Button) findViewById(R.id.button_setEventTime);
+        cardViewEvent = (CardView) findViewById(R.id.cardViewEvent)        ;
     }
 
     /**
@@ -116,6 +130,15 @@ public class EditEventActivity extends AppCompatActivity implements  DatePickerD
      */
     public void displayOriginalData()
     {
+        /*if(eventDateTime.compareTo(Calendar.getInstance())<0)
+        {
+            //case when event has passed
+            cardViewEvent.setCardBackgroundColor(ContextCompat.getColor(this, R.color.event_passed_color));
+        }
+        else
+        {
+            cardViewEvent.setCardBackgroundColor(ContextCompat.getColor(this, R.color.event_color));
+        }*/
         editTextTitle.setText(title);
         editTextDescription.setText(description);
         buttonDate.setText(EventHelper.getEventDateDisplayString(eventDateTime));
